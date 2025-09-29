@@ -18,11 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError, EndpointConnectionError, ConnectionClosedError, ReadTimeoutError
-
-# -----------------------------
 # Utilities
-# -----------------------------
-
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 
 def iso(ts) -> Optional[str]:
@@ -86,11 +82,7 @@ def make_session(region: Optional[str]) -> Tuple[Any, str]:
     session = boto3.session.Session(region_name=region)
     # region will be validated later
     return session, cfg
-
-# -----------------------------
 # Collectors
-# -----------------------------
-
 def get_account_identity(sts_client) -> Dict[str, str]:
     try:
         ident = retryable_call(sts_client.get_caller_identity)
@@ -322,10 +314,7 @@ def collect_s3_buckets(s3_client, s3_client_regional_factory) -> List[Dict[str, 
         raise
     return buckets
 
-# -----------------------------
 # Formatting
-# -----------------------------
-
 def summarize(iam_users, ec2_instances, s3_buckets, security_groups) -> Dict[str, Any]:
     running_instances = sum(1 for i in ec2_instances if i.get("state") == "running")
     return {
@@ -416,10 +405,7 @@ def render_table(payload: Dict[str, Any]) -> str:
         )
     return "\n".join(lines)
 
-# -----------------------------
 # Main
-# -----------------------------
-
 def main():
     parser = argparse.ArgumentParser(description="AWS Resource Inspector")
     parser.add_argument("--region", help="AWS region to inspect (default: from AWS config/env)")
